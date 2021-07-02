@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:Podlonia.Converters"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="220"
+        x:Class="Podlonia.Views.MessageWindow"
+        MinWidth="120" MinHeight="130"
+        Width="{Binding WindowWidth}" Height="{Binding WindowHeight}"
+        Icon="/Assets/RSS.ico"
+        Title="{Binding Caption}">
+
+  <Window.Resources>
+    <converters:ButtonMaskConverter x:Key="IsButtonEnabled"/>
+  </Window.Resources>
+
+  <Grid ColumnDefinitions="*,Auto,*" RowDefinitions="*,50" Margin="4 10">
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="*"
+          Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+      <Image Grid.Row="0" Grid.Column="0" />
+      <TextBlock
+        Grid.Row="0" Grid.Column="1"
+        Classes="h1" Margin="8"
+        VerticalAlignment="Center" HorizontalAlignment="Stretch"
+        TextAlignment="Center" TextWrapping="Wrap"
+        Text="{Binding Message}" />
+    </Grid>
+    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+      <Button
+            Padding="16 6" Margin="8"
+            IsVisible="{Binding ShowButtons, Converter={StaticResource IsButtonEnabled}, ConverterParameter=Ok}"
+            Command="{Binding OkCommand}">
+          Ok
+      </Button>
+      <Button
+            Padding="16 6" Margin="8" 
+            IsVisible="{Binding ShowButtons, Converter={StaticResource IsButtonEnabled}, ConverterParameter=Cancel}"
+            Command="{Binding CancelCommand}">
+          Cancel
+      </Button>
+      <Button
+            Padding="16 6" Margin="8" 
+            IsVisible="{Binding ShowButtons, Converter={StaticResource IsButtonEnabled}, ConverterParameter=Ignore}"
+            Command="{Binding IgnoreCommand}">
+          Ignore
+      </Button>
+      <Button
+            Padding="16 6" Margin="8" 
+            IsVisible="{Binding ShowButtons, Converter={StaticResource IsButtonEnabled}, ConverterParameter=Retry}"
+            Command="{Binding RetryCommand}">
+          Retry
+      </Button>
+      <Button
+            Padding="16 6" Margin="8" 
+            IsVisible="{Binding ShowButtons, Converter={StaticResource IsButtonEnabled}, ConverterParameter=Abort}"
+            Command="{Binding AbortCommand}">
+          Abort
+      </Button>
+    </StackPanel>
+  </Grid>
+</Window>

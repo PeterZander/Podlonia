@@ -1,17 +1,13 @@
-using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Diagnostics;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Podlonia.ViewModels;
 
 namespace Podlonia.Views
 {
-    public class MainWindow : Window
+    public class DevicesWindow : Window
     {
-        public MainWindow()
+        public DevicesWindow()
         {
             InitializeComponent();
 #if DEBUG
@@ -21,7 +17,7 @@ namespace Podlonia.Views
 
         private void InitializeComponent()
         {
-            AvaloniaXamlLoader.Load( this );
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

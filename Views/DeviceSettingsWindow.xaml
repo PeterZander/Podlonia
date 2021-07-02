@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:Podlonia.Converters"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="220"
+        x:Class="Podlonia.Views.DeviceSettingsWindow"
+        Width="500" Height="250"
+        MinWidth="120" MinHeight="130"
+        Title="{Binding Caption}">
+
+  <Window.Resources>
+    <converters:DataSizeTextConverter x:Key="StorageVolume"/>
+  </Window.Resources>
+
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Margin="8">
+      <Button Padding="16 6" Margin="8" Command="{Binding OkCommand}">Ok</Button>
+      <Button Padding="16 6" Margin="8" Command="{Binding CancelCommand}" IsEnabled="{Binding CanCancel}">Cancel</Button>
+    </StackPanel>
+    <Grid ColumnDefinitions="10,Auto,*,10" RowDefinitions="30,30,30,30,30">
+      <TextBlock
+        Grid.Row="1" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Download directory:" />
+      <TextBox
+        Grid.Row="1" Grid.Column="2"
+        VerticalAlignment="Center"
+        Text="{Binding SyncDevice.Path}" />
+
+      <TextBlock
+        Grid.Row="2" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Max file per feed:" />
+      <TextBox
+        Grid.Row="2" Grid.Column="2"
+        VerticalAlignment="Center"
+        Text="{Binding SyncDevice.MaxFilesPerFeed}" />
+
+      <TextBlock
+        Grid.Row="3" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Max size (bytes) per feed:" />
+      <Border
+          Grid.Row="3" Grid.Column="2"
+          BorderThickness="0"
+          ToolTip.Tip="0 = Unlimited">
+        <TextBox
+          VerticalAlignment="Center"
+          Text="{Binding SyncDevice.MaxStorageSpacePerFeed, Converter={StaticResource StorageVolume}}" />
+      </Border>
+
+      <TextBlock
+        Grid.Row="4" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Max age (days):" />
+      <Border
+          Grid.Row="4" Grid.Column="2"
+          BorderThickness="0"
+          ToolTip.Tip="0 = Unlimited">
+        <TextBox
+          VerticalAlignment="Center"
+          Text="{Binding SyncDevice.MaxAgeDays}" />
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="220"
+        x:Class="Podlonia.Views.DevicesWindow"
+        Width="800" Height="400"
+        MinWidth="120" MinHeight="130"
+        Name="TheDevicesWindow"
+        Title="{Binding Caption}">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Right" 
+          VerticalAlignment="Top" HorizontalAlignment="Right" 
+          Orientation="Vertical" 
+          Margin="8">
+      <Button Padding="16 6" Margin="8" Command="{Binding OkCommand}">Ok</Button>
+      <Button Padding="16 6" Margin="8" Command="{Binding CancelCommand}">Cancel</Button>
+    </StackPanel>
+    <ListBox Items="{Binding RootPaths}"
+            Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" >
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <Border Background="#06ffffff" CornerRadius="4" Padding="4">
+                    <Border.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Settings..."
+                                IsEnabled="{Binding IsReadOnly}"
+                                Command="{Binding ShowDeviceSettings}" 
+                                CommandParameter="{Binding #TheDevicesWindow}" />
+                        </ContextMenu>
+                    </Border.ContextMenu>
+                    <Grid ColumnDefinitions="35,200,8,70,8,*" RowDefinitions="Auto"
+                          VerticalAlignment="Center">
+                        <CheckBox Grid.Row="0" Grid.Column="0"
+                                IsChecked="{Binding IsSelected}" />
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                Background="Transparent"
+                                IsReadOnly="True"
+                                BorderThickness="0"
+                                Text="{Binding DriveInfo.RootDirectory, Mode=OneWay}" />
+                        <TextBox Grid.Row="0" Grid.Column="3"
+                                Background="Transparent"
+                                IsReadOnly="True"
+                                BorderThickness="0"
+                                Text="{Binding DriveInfo.DriveType}" />
+                        <TextBox Grid.Row="0" Grid.Column="5"
+                                IsVisible="{Binding IsSelected}"
+                                BorderThickness="{Binding BorderThickness}"
+                                IsReadOnly="{Binding IsReadOnly}"
+                                Text="{Binding DownloadDirectory}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</Window>

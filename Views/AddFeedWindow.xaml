@@ -1,0 +1,137 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="220"
+        x:Class="Podlonia.Views.AddFeedWindow"
+        Width="1000" Height="400"
+        MinWidth="120" MinHeight="130"
+        Title="{Binding Caption}">
+  <DockPanel Margin="6 12">
+    <StackPanel DockPanel.Dock="Right" 
+          VerticalAlignment="Top" HorizontalAlignment="Right" 
+          Orientation="Vertical" 
+          Margin="8">
+      <Button Padding="16 6" Margin="8" 
+          IsEnabled="{Binding RSSFeedInfoValid}"
+          Command="{Binding OkCommand}">
+          Ok
+      </Button>
+      <Button Padding="16 6" Margin="8" Command="{Binding CancelCommand}">Cancel</Button>
+    </StackPanel>
+    <Grid DockPanel.Dock="Top" 
+          VerticalAlignment="Center"
+          ColumnDefinitions="10,Auto,*,Auto,Auto,10" RowDefinitions="30,*">
+      <TextBlock
+        Grid.Row="0" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="RSS Feed URL:" />
+      <TextBox
+        Grid.Row="0" Grid.Column="2"
+        VerticalAlignment="Center"
+        Text="{Binding FeedURL}" />
+      <Button
+        Grid.Row="0" Grid.Column="3"
+        Padding="16 6" Margin="2"
+        IsEnabled="{Binding !RSSFeedInfoValid}"
+        Command="{Binding GetFeedInfo}">
+        Retrieve
+      </Button>
+      <Button
+        Grid.Row="0" Grid.Column="4"
+        Padding="16 6" Margin="2"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Command="{Binding ClearFeedInfo}">
+        Clear
+      </Button>
+    </Grid>
+    <Grid ColumnDefinitions="10,Auto,*,Auto,10" RowDefinitions="30,30,30,30,30,30,30,*">
+      <TextBlock
+        Grid.Row="1" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Title:" />
+      <TextBox
+        Grid.Row="1" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding RSSFeedInfo.Title}" />
+
+      <TextBlock
+        Grid.Row="2" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Subdirectory:" />
+      <TextBox
+        Grid.Row="2" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding DownloadDirectory}" />
+
+      <TextBlock
+        Grid.Row="3" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Description:" />
+      <TextBox
+        Grid.Row="3" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding RSSFeedInfo.Description}" />
+
+      <TextBlock
+        Grid.Row="4" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Category:" />
+      <TextBox
+        Grid.Row="4" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding RSSFeedInfo.Category}" />
+
+      <TextBlock
+        Grid.Row="5" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Image URL:" />
+      <TextBox
+        Grid.Row="5" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding RSSFeedInfo.ImageUrl}" />
+
+      <TextBlock
+        Grid.Row="6" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Link:" />
+      <TextBox
+        Grid.Row="6" Grid.Column="2"
+        VerticalAlignment="Center"
+        IsEnabled="{Binding RSSFeedInfoValid}"
+        Text="{Binding RSSFeedInfo.Link}" />
+
+      <ListBox Items="{Binding RSSFeedInfo.Items}"
+              IsEnabled="{Binding RSSFeedInfoValid}"
+              Margin="0 8 0 2"
+              Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" >
+          <ListBox.ItemTemplate>
+              <DataTemplate>
+                  <Border Background="#06ffffff" CornerRadius="4" Padding="4">
+                      <Grid ColumnDefinitions="*" RowDefinitions="Auto"
+                            VerticalAlignment="Center">
+                          <TextBox Grid.Row="0" Grid.Column="1"
+                                  Background="Transparent"
+                                  IsReadOnly="True"
+                                  BorderThickness="0"
+                                  Text="{Binding Title}" />
+                      </Grid>
+                  </Border>
+              </DataTemplate>
+          </ListBox.ItemTemplate>
+      </ListBox>
+    </Grid>
+  </DockPanel>
+</Window>

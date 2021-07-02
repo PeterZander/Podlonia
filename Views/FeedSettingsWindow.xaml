@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="220"
+        x:Class="Podlonia.Views.FeedSettingsWindow"
+        Width="500" Height="200"
+        MinWidth="120" MinHeight="130"
+        Title="{Binding Caption}">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Margin="8">
+      <Button Padding="16 6" Margin="8" Command="{Binding OkCommand}">Ok</Button>
+      <Button Padding="16 6" Margin="8" Command="{Binding CancelCommand}">Cancel</Button>
+    </StackPanel>
+    <Grid ColumnDefinitions="10,Auto,*,10" RowDefinitions="30,30,30">
+      <TextBlock
+        Grid.Row="1" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Download published within (days):" />
+      <Border
+          Grid.Row="1" Grid.Column="2"
+          BorderThickness="0"
+          ToolTip.Tip="0 = Unlimited">
+        <TextBox
+          VerticalAlignment="Center"
+          Text="{Binding MaxAgeForDownloadDays}" />
+      </Border>
+
+      <TextBlock
+        Grid.Row="2" Grid.Column="1"
+        VerticalAlignment="Center" Margin="5"
+        Classes="label"
+        Text="Delete older than (days):" />
+      <Border
+          Grid.Row="2" Grid.Column="2"
+          BorderThickness="0"
+          ToolTip.Tip="0 = Never delete">
+        <TextBox
+          VerticalAlignment="Center"
+          Text="{Binding MaxAgeForStorageDays}" />
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

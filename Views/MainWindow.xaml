@@ -5,15 +5,253 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Podlonia.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Name="TheMainWindow"
+        Icon="/Assets/RSS.ico"
         Title="Podlonia">
 
-  <Design.DataContext>
-    <vm:MainWindowViewModel/>
-  </Design.DataContext>
-  <Grid ColumnDefinitions="2*,4,5*" RowDefinitions="1*">
-    <TextBlock Text="Left" Grid.Row="0" Grid.Column="0" Background="Green" />
-    <GridSplitter Grid.Row="0" Grid.Column="1" />
-    <TextBlock Text="Right" Grid.Row="0" Grid.Column="2" Background="Blue" />
-  </Grid>
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Add RSS feed..." Command="{Binding ShowAddFeedWindow}" />
+                <MenuItem Header="_Devices..." Command="{Binding DevicesWindowCommand}" />
+                <Separator/>
+                <MenuItem Header="_Exit"/>
+            </MenuItem>
+            <MenuItem Header="_Run">
+                <MenuItem Header="Start RSS _scan"
+                        IsEnabled="{Binding !ShowStatusBar}"
+                        Command="{Binding StartRSSScanCommand}" />
+                <MenuItem Header="Start enclosure _download"
+                        IsEnabled="{Binding !ShowStatusBar}"
+                        Command="{Binding StartDownloadCommand}" />
+                <MenuItem Header="Start device synchroni_zation"
+                        IsEnabled="{Binding !ShowStatusBar}"
+                        Command="{Binding StartSyncCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Header="Scan feeds" Command="{Binding ToggleEnableScanCommand}">
+                    <MenuItem.Icon>
+                        <CheckBox BorderThickness="0"
+                                IsHitTestVisible="False"
+                                IsChecked="{Binding ApplicationConfiguration.EnableScan}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Download files" Command="{Binding ToggleEnableDownloadCommand}">
+                    <MenuItem.Icon>
+                        <CheckBox BorderThickness="0"
+                                IsHitTestVisible="False"
+                                IsChecked="{Binding ApplicationConfiguration.EnableDownload}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="Sync devices" Command="{Binding ToggleEnableSyncCommand}">
+                    <MenuItem.Icon>
+                        <CheckBox BorderThickness="0"
+                                IsHitTestVisible="False"
+                                IsChecked="{Binding ApplicationConfiguration.EnableSync}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Settings..." Command="{Binding SettingsWindowCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Event log" Command="{Binding EventWindowCommand}" />
+                <Separator/>
+                <MenuItem Header="_Licences" Command="{Binding LicencesWindowCommand}" />
+                <MenuItem Header="_About..." Command="{Binding AboutWindowCommand}" />
+            </MenuItem>
+        </Menu>
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="5,2*,4,5*,5" RowDefinitions="*" 
+            Height="35" IsVisible="{Binding ShowStatusBar}">
+            <Border Grid.Row="0" Grid.Column="1"
+                    Padding="5"
+                    BorderThickness="1" BorderBrush="#10ffffff">
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusBarMessage}" />
+            </Border>
+            <Border Grid.Row="0" Grid.Column="3"
+                    Padding="5"
+                    BorderThickness="1" BorderBrush="#10ffffff">
+                <ProgressBar Value="{Binding StatusBarProgress}" />
+            </Border>
+        </Grid>
+        <Grid ColumnDefinitions="2*,4,5*" RowDefinitions="*">
+            <ListBox Items="{Binding Feeds}" Name="FeedList" SelectedItem="{Binding FeedsSelectedItem}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*" RowDefinitions="Auto,Auto">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Feed settings..."
+                                        Command="{Binding Path=#TheMainWindow.DataContext.FeedSettingsCommand}" 
+                                        CommandParameter="{Binding .}" />
+                                    <Separator/>
+                                    <MenuItem Header="Delete feed"
+                                        Command="{Binding Path=#TheMainWindow.DataContext.DeleteFeedCommand}" 
+                                        CommandParameter="{Binding .}" />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    Background="#06ffffff" CornerRadius="4" Padding="8">
+                                <TextBlock
+                                    HorizontalAlignment="Stretch"
+                                    Text="{Binding Name}" />
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    IsVisible="{Binding ShowError}"
+                                    Background="#20ff3030" CornerRadius="4" Padding="12">
+                                <TextBlock
+                                    Text="{Binding LatestError}" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <GridSplitter Grid.Row="0" Grid.Column="1" />
+            <Grid 
+                        Grid.Row="0" Grid.Column="2"
+                        Margin="8"
+                        ColumnDefinitions="8,Auto,8,*,Auto" RowDefinitions="30,30,30,30,30,*">
+
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Text="Feed name:" />
+                <TextBox Grid.Row="0" Grid.Column="3"
+                        BorderThickness="0"
+                        IsReadOnly="True"
+                        VerticalAlignment="Center"
+                        Text="{Binding #FeedList.SelectedItem.Name}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Text="Link:" />
+                <TextBox Grid.Row="1" Grid.Column="3"
+                        BorderThickness="0" IsReadOnly="True"
+                        VerticalAlignment="Center"
+                        Text="{Binding #FeedList.SelectedItem.Description}" />
+
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Text="Path:" />
+                <TextBox Grid.Row="2" Grid.Column="3"
+                        BorderThickness="0" IsReadOnly="True"
+                        VerticalAlignment="Center"
+                        Text="{Binding #FeedList.SelectedItem.LocalPath}" />
+
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Text="Url:" />
+                <TextBox Grid.Row="3" Grid.Column="3"
+                        BorderThickness="0" IsReadOnly="True"
+                        VerticalAlignment="Center"
+                        Text="{Binding #FeedList.SelectedItem.Url}" />
+                <ListBox 
+                        Grid.Row="0" Grid.Column="4" Grid.RowSpan="5"
+                        Width="200" IsVisible="{Binding !!OnlineDevices.Count}"
+                        Items="{Binding OnlineDevices}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#06ffffff" CornerRadius="4" Padding="4">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Settings..."
+                                            Command="{Binding #TheMainWindow.DataContext.ShowDeviceSettingsCommand}" 
+                                            CommandParameter="{Binding .}" />
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+                                <TextBlock Text="{Binding Name}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox Items="{Binding SelectedFeedDownloadItems}"
+                        SelectedItems="{Binding SelectedFeedSelectedDownloadItems}"
+                        SelectionMode="Multiple"
+                        Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#06ffffff" CornerRadius="4" Padding="4">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Open" Command="{Binding #TheMainWindow.DataContext.OpenFileCommand}" />
+                                        <Separator/>
+                                        <MenuItem Header="Force download" Command="{Binding #TheMainWindow.DataContext.ToggleForceDownloadCommand}">
+                                            <MenuItem.Icon>
+                                                <CheckBox BorderThickness="0"
+                                                        IsHitTestVisible="False"
+                                                        IsChecked="{Binding Info.ForceDownload}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Force sync" Command="{Binding #TheMainWindow.DataContext.ToggleForceSyncCommand}">
+                                            <MenuItem.Icon>
+                                                <CheckBox BorderThickness="0"
+                                                        IsHitTestVisible="False"
+                                                        IsChecked="{Binding Info.ForceSync}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Reset errors"
+                                            Command="{Binding Path=#TheMainWindow.DataContext.ResetErrorOnEnclosureDownloadCommand}" />
+                                        <Separator/>
+                                         <MenuItem Header="Delete files"
+                                            Command="{Binding Path=#TheMainWindow.DataContext.DeleteDownloadedFilesCommand}" />
+                                   </ContextMenu>
+                                </Border.ContextMenu>
+                                <Grid ColumnDefinitions="30,30,30,30,200,*" RowDefinitions="20">
+                                    <ProgressBar 
+                                            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6"
+                                            IsVisible="{Binding !DownloadProgressInfo.Finished}"
+                                            Value="{Binding DownloadProgressInfo.ProgressPercent}" />
+                                    <Image
+                                            Grid.Row="0" Grid.Column="0"
+                                            IsVisible="{Binding !!Info.DownloadCount}"
+                                            Width="15" Height="15"
+                                            Source="/Assets/check.png" />
+                                    <Border
+                                        BorderThickness="0"
+                                        Grid.Row="0" Grid.Column="1"
+                                        IsVisible="{Binding !!Info.DownloadErrorCount}"
+                                        ToolTip.Tip="{Binding Info.DownloadErrorCount}">
+                                        <Image
+                                                Width="15" Height="15"
+                                                Source="/Assets/error.png" />
+                                    </Border>
+                                    <Border
+                                        Grid.Row="0" Grid.Column="2"
+                                        IsVisible="{Binding Info.ForceDownload}"
+                                        BorderThickness="0"
+                                        ToolTip.Tip="Force download">
+                                    <Image
+                                            Width="15" Height="15"
+                                            Source="/Assets/forcedownload.png" />
+                                    </Border>
+
+                                    <Border
+                                        Grid.Row="0" Grid.Column="3"
+                                        IsVisible="{Binding Info.ForceSync}"
+                                        BorderThickness="0"
+                                        ToolTip.Tip="Force Sync">
+                                    <Image
+                                            Width="15" Height="15"
+                                            Source="/Assets/forcesync.png" />
+                                    </Border>
+
+                                    <TextBlock 
+                                            Grid.Row="0" Grid.Column="4"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Info.PubDate}" />
+                                    <TextBlock
+                                            Grid.Row="0" Grid.Column="5"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Info.RelFileName}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </DockPanel>
 </Window>
